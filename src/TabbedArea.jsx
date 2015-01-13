@@ -31,7 +31,8 @@ var TabbedArea = React.createClass({
   getDefaultProps: function () {
     return {
       bsStyle: "tabs",
-      animation: true
+      animation: true,
+      tabsLast: false
     };
   },
 
@@ -71,17 +72,21 @@ var TabbedArea = React.createClass({
     }
 
     var nav = this.transferPropsTo(
-      <Nav activeKey={activeKey} onSelect={this.handleSelect} ref="tabs">
+      <Nav activeKey={activeKey} key={1} onSelect={this.handleSelect} ref="tabs">
         {ValidComponentChildren.map(this.props.children, renderTabIfSet, this)}
       </Nav>
+    ),
+    tabContent = (
+      <div id={this.props.id} key={2} className="tab-content" ref="panes">
+        {ValidComponentChildren.map(this.props.children, this.renderPane)}
+      </div>q
     );
+
+    var content = this.props.tabsLast ? [tabContent, nav] : [nav, tabContent];
 
     return (
       <div>
-        {nav}
-        <div id={this.props.id} className="tab-content" ref="panes">
-          {ValidComponentChildren.map(this.props.children, this.renderPane)}
-        </div>
+        {content}
       </div>
     );
   },
